@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-wrapper">
+        <div class="auth-container-split">
+            <!-- Left Panel - Marketing Content -->
+            <div class="auth-left-panel">
+                <div class="auth-branding">
+                    <div class="logo-icon-large">
+                        <ion-icon name="trending-up-outline"></ion-icon>
+                    </div>
+                    <h1>Manage Your Money</h1>
+                    <p class="tagline">Track expenses, visualize spending patterns, and take control of your finances
+                        with our intuitive personal finance tracker.</p>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <ion-icon name="flash-outline"></ion-icon>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Real-time expense tracking</h3>
+                            <p>Monitor your spending as it happens</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <ion-icon name="analytics-outline"></ion-icon>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Smart analytics & insights</h3>
+                            <p>Understand your financial patterns</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <ion-icon name="cloud-download-outline"></ion-icon>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Export & backup your data</h3>
+                            <p>Keep your financial data secure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Auth Forms -->
+            <div class="auth-right-panel">
+                <div class="auth-card">
+                    <div class="logo-area-small">
+                        <div class="logo-icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </div>
+                        <h2>Finance</h2>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form active">
+                        <div class="auth-tabs">
+                            <button type="button" class="auth-tab active">Sign In</button>
+                            <button type="button" class="auth-tab" id="show-signup-tab">Create Account</button>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="login-email">Email</label>
+                            <div class="input-wrapper">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <input type="email" id="login-email" placeholder="you@example.com" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-wrapper">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                                <input type="password" id="login-password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Sign In</button>
+
+                        <div class="divider">Or continue with</div>
+                        <button type="button" class="btn-google full-width">
+                            <ion-icon name="logo-google"></ion-icon>
+                            Google
+                        </button>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form hidden">
+                        <div class="auth-tabs">
+                            <button type="button" class="auth-tab" id="show-login-tab">Sign In</button>
+                            <button type="button" class="auth-tab active">Create Account</button>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signup-email">Email</label>
+                            <div class="input-wrapper">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <input type="email" id="signup-email" placeholder="you@example.com" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="signup-password">Password</label>
+                            <div class="input-wrapper">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                                <input type="password" id="signup-password" placeholder="Create a password" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="signup-confirm-password">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                                <input type="password" id="signup-confirm-password" placeholder="Confirm password"
+                                    required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Create Account</button>
+                        <div class="divider">By signing up, you agree to our Terms.</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app-container" class="app-layout hidden">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Finance</h2>
+                <span class="subtitle">Personal Tracker</span>
+            </div>
+
+            <button id="add-transaction-sidebar-btn" class="btn-primary full-width main-action">
+                <ion-icon name="add-outline"></ion-icon> Dashboard
+            </button> <!-- Reverted to simple active state mgmt -->
+
+            <nav>
+                <ul>
+                    <li class="active" data-view="dashboard-view"><ion-icon name="grid-outline"></ion-icon> Dashboard
+                    </li>
+                    <li data-view="transactions-view"><ion-icon name="list-outline"></ion-icon> Transactions</li>
+                    <li data-view="categories-view"><ion-icon name="pricetags-outline"></ion-icon> Categories</li>
+                    <!-- New -->
+                    <li data-view="analytics-view"><ion-icon name="bar-chart-outline"></ion-icon> Analytics</li>
+                    <!-- New -->
+                    <li data-view="settings-view"><ion-icon name="settings-outline"></ion-icon> Settings</li>
+                    <!-- New -->
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <span id="user-email-display"
+                    style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;"></span>
+                <button id="logout-btn" class="logout-link"><ion-icon name="log-out-outline"></ion-icon> Sign
+                    Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- DASHBOARD VIEW -->
+            <div id="dashboard-view" class="view active">
+                <header class="topbar">
+                    <h2 id="page-title">Welcome back!</h2>
+                    <span class="date-display" id="current-date"></span>
+                </header>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span>Total Balance</span>
+                            <div class="icon-box green"><ion-icon name="wallet-outline"></ion-icon></div>
+                        </div>
+                        <p class="amount" id="total-balance">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span>This Month Income</span>
+                            <div class="icon-box green"><ion-icon name="trending-up-outline"></ion-icon></div>
+                        </div>
+                        <p class="amount" id="month-income">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span>This Month Expense</span>
+                            <div class="icon-box red"><ion-icon name="trending-down-outline"></ion-icon></div>
+                        </div>
+                        <p class="amount" id="month-expense">$0.00</p>
+                    </div>
+                </div>
+
+                <div class="chart-section card">
+                    <h3>Balance Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="balanceTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-transactions-section">
+                    <div class="section-header">
+                        <h3>Recent Transactions</h3>
+                        <button class="btn-primary sm" id="add-transaction-dash-btn">+ Add Transaction</button>
+                    </div>
+                    <ul id="dashboard-tx-list" class="tx-list">
+                        <!-- Injected JS -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS VIEW -->
+            <div id="transactions-view" class="view hidden">
+                <header class="topbar">
+                    <h2>Transactions</h2>
+                </header>
+
+                <div class="filters-bar card">
+                    <div class="search-box">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" id="tx-search" placeholder="Search transactions...">
+                    </div>
+                    <select id="tx-filter-category">
+                        <option value="all">All Categories</option>
+                        <!-- Dynamic -->
+                    </select>
+                    <div class="actions-right">
+                        <button class="btn-primary" id="add-transaction-view-btn">+ Add Transaction</button>
+                        <button class="btn-outline" id="export-csv-btn">Export CSV</button>
+                    </div>
+                </div>
+
+                <div class="transactions-list-container card">
+                    <ul id="full-tx-list" class="tx-list">
+                        <!-- Injected JS -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CATEGORIES VIEW -->
+            <div id="categories-view" class="view hidden">
+                <header class="topbar">
+                    <h2>Categories</h2>
+                </header>
+                <div class="content-wrapper">
+                    <div class="card">
+                        <div class="section-header">
+                            <h3>Manage Categories</h3>
+                            <button class="btn-primary sm" id="add-category-btn">+ Add Category</button>
+                        </div>
+                        <ul id="categories-list" class="simple-list">
+                            <!-- Dynamic -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS VIEW -->
+            <div id="analytics-view" class="view hidden">
+                <header class="topbar">
+                    <h2>Analytics</h2>
+                </header>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <h3>Top Category</h3>
+                        <p class="highlight" id="top-category">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Income</h3>
+                        <p class="amount" id="analytics-income">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Expense</h3>
+                        <p class="amount" id="analytics-expense">$0.00</p>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="card">
+                        <h3>Income vs Expense</h3>
+                        <canvas id="incomeExpenseChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Spending by Category</h3>
+                        <canvas id="categoryPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="summary-card card">
+                    <h3>Summary</h3>
+                    <div class="summary-stats">
+                        <div class="s-item">
+                            <span>Saving Rate</span>
+                            <strong id="saving-rate">0%</strong>
+                        </div>
+                        <div class="s-item">
+                            <span>Avg. Monthly Exp</span>
+                            <strong id="avg-expense">$0.00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div id="settings-view" class="view hidden">
+                <header class="topbar">
+                    <h2>Settings</h2>
+                </header>
+                <div class="settings-container">
+                    <div class="card">
+                        <h3>Profile</h3>
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="settings-name" placeholder="Your Name">
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="settings-email" disabled>
+                        </div>
+                        <button class="btn-primary sm" id="update-profile-btn">Update Profile</button>
+                    </div>
+                    <div class="card">
+                        <h3>Preferences</h3>
+                        <div class="toggle-row">
+                            <span>Email Notifications</span>
+                            <label class="switch">
+                                <input type="checkbox" id="pref-email-notif">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card danger-zone">
+                        <h3>Account</h3>
+                        <button class="btn-danger-outline" id="delete-account-btn">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transaction-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Add Transaction</h2>
+            <form id="transaction-form-modal">
+                <div class="input-group">
+                    <label>Type</label>
+                    <div class="type-selector">
+                        <input type="radio" name="type" id="type-expense" value="expense" checked>
+                        <label for="type-expense" class="radio-label expense">Expense</label>
+                        <input type="radio" name="type" id="type-income" value="income">
+                        <label for="type-income" class="radio-label income">Income</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Amount</label>
+                    <input type="number" id="t-amount" step="0.01" required placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" id="t-date" required>
+                </div>
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="t-category">
+                        <!-- Dynamic -->
+                        <option value="food">Food</option>
+                        <option value="transport">Transport</option>
+                        <option value="salary">Salary</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Note</label>
+                    <input type="text" id="t-note" placeholder="Optional note">
+                </div>
+                <button type="submit" class="btn-primary full-width">Save Transaction</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
